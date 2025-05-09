@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 function Programs() {
     const [programs, setPrograms] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
        const fetchPrograms = async () => {
@@ -12,15 +13,20 @@ function Programs() {
             }
             const jsonPrograms = await response.json();
             setPrograms(jsonPrograms);
-        }
-        catch (error) {
+        } catch (error) {
             console.error("Fetch error:", error);
+        } finally {
+            setLoading(false);
         }
        }
 
        fetchPrograms();
        console.log(programs);
     }, []);
+
+    if (loading) {
+        return <div>Loading programs...</div>;
+    }
 
     return (
         <div>
