@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import NotSignedIn from '../components/NotSignedIn';
 
 function Programs() {
+    const { user } = useAuth();
     const [programs, setPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -43,30 +46,34 @@ function Programs() {
 
     return (
         <div className="container">
-            <div className="card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                    <h1 className="page-title">Programs</h1>
-                    <button className="btn btn-primary">Add New Program</button>
+            {user?
+            (
+                <div className="card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                        <h1 className="page-title">Programs</h1>
+                        <button className="btn btn-primary">Add New Program</button>
+                    </div>
+                    <div>
+                        {programs.map((program) => (
+                            <div key={program.id} className="card" style={{ 
+                                borderLeft: '4px solid var(--primary-color)',
+                                transition: 'transform 0.2s ease',
+                                cursor: 'pointer'
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                                <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem' }}>{program.title}</h3>
+                                {program.description && (
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                                        {program.description}
+                                    </p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <div>
-                    {programs.map((program) => (
-                        <div key={program.id} className="card" style={{ 
-                            borderLeft: '4px solid var(--primary-color)',
-                            transition: 'transform 0.2s ease',
-                            cursor: 'pointer'
-                        }}
-                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
-                        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-                            <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem' }}>{program.title}</h3>
-                            {program.description && (
-                                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                                    {program.description}
-                                </p>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </div>
+            ):
+            (<NotSignedIn message="Sign In to Access Program List"/>)}
         </div>
     );
 }
