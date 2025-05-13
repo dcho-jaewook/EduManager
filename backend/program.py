@@ -27,3 +27,9 @@ def get_all_programs():
     except Exception as e:
         print(f"Exception in get_all_programs: {e}")
         return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
+
+# CREATE: Create a program
+# @program_bp.route('', methods=['POST'])
+# def create_program():
+#     print(request)
+#     return
