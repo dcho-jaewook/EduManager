@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import NotSignedIn from '../components/NotSignedIn';
 
 function Programs() {
-    const { user, loadingAuth } = useAuth();
+    const { user, userRole, loadingAuth } = useAuth();
     const [programs, setPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -22,15 +22,14 @@ function Programs() {
 
         const fetchPrograms = async () => {
             try {
-                //Log detailed auth information
                 console.log('Auth State:', {
                     userId: user?.id,
                     email: user?.email,
-                    role: user?.role,
+                    role: userRole,
                     session: await supabase.auth.getSession()
                 });
 
-                const {data, error: programsError } = await supabase
+                const { data, error: programsError } = await supabase
                     .from('programs')
                     .select('*')
                     .order('created_at', { ascending: false });
@@ -40,25 +39,22 @@ function Programs() {
                         message: programsError.message,
                         details: programsError.details,
                         hint: programsError.hint,
-                        code: programsError.code,
-                        // Add the actual SQL query that was attempted
-                        query: programsError.query
+                        code: programsError.code
                     });
                     throw programsError;
                 }
 
-                console.log('Raw response:', { data, error: programsError });
                 setPrograms(data || []);
             } catch (fetchError) {
                 console.error("Full error object:", fetchError);
-                setError(fetchError);
+                setError(fetchError.message || 'Failed to fetch programs');
             } finally {
                 setLoading(false);
             }
         }
 
         fetchPrograms();
-    }, [user, loadingAuth]);
+    }, [user, userRole, loadingAuth]);
 
     if (loading || loadingAuth) {
         return (
@@ -72,18 +68,29 @@ function Programs() {
         return <NotSignedIn message="Sign In to Access Program List"/>;
     }
 
-    if (error) {
+    if (userRole !== 'admin') {
         return (
             <div className="container">
-                <div className="error">Error: {error.message}</div>
+                <div className="error">
+                    You don't have permission to access programs. Only administrators can view and manage programs.
+                </div>
             </div>
         );
     }
-    
+
     if (error) {
         return (
             <div className="container">
-                <div className="error">Error fetching programs: {error.message}</div>
+                <div className="error">
+                    Error: {error}
+                    <button 
+                        className="btn btn-primary" 
+                        onClick={() => setError(null)}
+                        style={{ marginTop: '1rem' }}
+                    >
+                        Dismiss
+                    </button>
+                </div>
             </div>
         );
     }
@@ -96,22 +103,29 @@ function Programs() {
                     <button className="btn btn-primary">Add New Program</button>
                 </div>
                 <div>
-                    {programs.map((program) => (
-                        <div key={program.id} className="card" style={{ 
-                            borderLeft: '4px solid var(--primary-color)',
-                            transition: 'transform 0.2s ease',
-                            cursor: 'pointer'
-                        }}
-                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
-                        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-                            <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem' }}>{program.title}</h3>
-                            {program.description && (
-                                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                                    {program.description}
-                                </p>
-                            )}
+                    {programs.length === 0 ? (
+                        <div className="no-programs">
+                            <p>No programs available yet.</p>
+                            <p>Click the "Add New Program" button to create one.</p>
                         </div>
-                    ))}
+                    ) : (
+                        programs.map((program) => (
+                            <div key={program.id} className="card" style={{ 
+                                borderLeft: '4px solid var(--primary-color)',
+                                transition: 'transform 0.2s ease',
+                                cursor: 'pointer'
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                                <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem' }}>{program.title}</h3>
+                                {program.description && (
+                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                                        {program.description}
+                                    </p>
+                                )}
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </div>
