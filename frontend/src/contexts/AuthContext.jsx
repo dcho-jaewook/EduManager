@@ -5,22 +5,43 @@ const AuthContext = createContext({})
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [userRole, setUserRole] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const fetchUserRole = async (userId) => {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', userId)
+                .single();
+            
+            if (!error && data) {
+                setUserRole(data.role);
+            }
+        };
+
         // Check active sessions and sets the user
         supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null)
+            setUser(session?.user ?? null);
+            if (session?.user) {
+                fetchUserRole(session.user.id);
+            }
             setLoading(false)
         })
 
         // Listen for changes on auth state (sign in, sign out, etc.)
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null)
-            setLoading(false)
-        })
+            setUser(session?.user ?? null);
+            if (session?.user) {
+                fetchUserRole(session.user.id);
+            } else {
+                setUserRole(null);
+            }
+            setLoading(false);
+        });
 
-        return () => subscription.unsubscribe()
+        return () => subscription.unsubscribe();
     }, [])
 
     const signInWithGoogle = async () => {
@@ -51,6 +72,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         user,
         loading,
+        userRole,
         signInWithGoogle,
         signOut
     }

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import NotSignedIn from '../components/NotSignedIn';
 
 function Home() {
-    const { user } = useAuth();
+    const { user, userRole } = useAuth();
     const navigate = useNavigate();
 
     return (
