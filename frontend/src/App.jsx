@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import Programs from './pages/Programs';
 import NavBar from './components/NavBar';
 import AuthCallback from './pages/AuthCallback';
+import AdminPage from './pages/AdminPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
@@ -18,6 +20,14 @@ function App() {
             <Route path="/" element={<Home />}/>
             <Route path="/programs" element={<Programs />}/>
             <Route path="/auth/callback" element={<AuthCallback />}/>
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </BrowserRouter>

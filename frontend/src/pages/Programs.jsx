@@ -1,34 +1,62 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabaseClient';
 import NotSignedIn from '../components/NotSignedIn';
 
 function Programs() {
-    const { user } = useAuth();
+    const { user, userRole, loadingAuth } = useAuth();
     const [programs, setPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        // Wait for auth state and user profile to be resolved
+        if (loadingAuth) {
+            return;
+        }
+
+        if (!user) {
+            setLoading(false);
+            return;
+        }
+
         const fetchPrograms = async () => {
             try {
-                const response = await fetch("http://127.0.0.1:5000/api/programs");
-                if (!response.ok) {
-                    throw new Error("Server Error");
+                console.log('Auth State:', {
+                    userId: user?.id,
+                    email: user?.email,
+                    role: userRole,
+                    session: await supabase.auth.getSession()
+                });
+
+                const { data, error: programsError } = await supabase
+                    .from('programs')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (programsError) {
+                    console.error('Supabase error details:', {
+                        message: programsError.message,
+                        details: programsError.details,
+                        hint: programsError.hint,
+                        code: programsError.code
+                    });
+                    throw programsError;
                 }
-                const jsonPrograms = await response.json();
-                setPrograms(jsonPrograms);
-            } catch (error) {
-                setError(error);
-                console.error("Fetch error:", error);
+
+                setPrograms(data || []);
+            } catch (fetchError) {
+                console.error("Full error object:", fetchError);
+                setError(fetchError.message || 'Failed to fetch programs');
             } finally {
                 setLoading(false);
             }
         }
 
         fetchPrograms();
-    }, []);
+    }, [user, userRole, loadingAuth]);
 
-    if (loading) {
+    if (loading || loadingAuth) {
         return (
             <div className="container">
                 <div className="loading">Loading programs...</div>
@@ -36,25 +64,52 @@ function Programs() {
         );
     }
 
+    if (!user) {
+        return <NotSignedIn message="Sign In to Access Program List"/>;
+    }
+
+    if (userRole !== 'admin') {
+        return (
+            <div className="container">
+                <div className="error">
+                    You don't have permission to access programs. Only administrators can view and manage programs.
+                </div>
+            </div>
+        );
+    }
+
     if (error) {
         return (
             <div className="container">
-                <div className="error">Error: {error.message}</div>
+                <div className="error">
+                    Error: {error}
+                    <button 
+                        className="btn btn-primary" 
+                        onClick={() => setError(null)}
+                        style={{ marginTop: '1rem' }}
+                    >
+                        Dismiss
+                    </button>
+                </div>
             </div>
         );
     }
 
     return (
         <div className="container">
-            {user?
-            (
-                <div className="card">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                        <h1 className="page-title">Programs</h1>
-                        <button className="btn btn-primary">Add New Program</button>
-                    </div>
-                    <div>
-                        {programs.map((program) => (
+            <div className="card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                    <h1 className="page-title">Programs</h1>
+                    <button className="btn btn-primary">Add New Program</button>
+                </div>
+                <div>
+                    {programs.length === 0 ? (
+                        <div className="no-programs">
+                            <p>No programs available yet.</p>
+                            <p>Click the "Add New Program" button to create one.</p>
+                        </div>
+                    ) : (
+                        programs.map((program) => (
                             <div key={program.id} className="card" style={{ 
                                 borderLeft: '4px solid var(--primary-color)',
                                 transition: 'transform 0.2s ease',
@@ -69,11 +124,10 @@ function Programs() {
                                     </p>
                                 )}
                             </div>
-                        ))}
-                    </div>
+                        ))
+                    )}
                 </div>
-            ):
-            (<NotSignedIn message="Sign In to Access Program List"/>)}
+            </div>
         </div>
     );
 }
