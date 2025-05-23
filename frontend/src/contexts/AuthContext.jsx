@@ -10,14 +10,41 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchUserRole = async (userId) => {
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', userId)
-                .single();
-            
-            if (!error && data) {
-                setUserRole(data.role);
+            try {
+                // console.log('Fetching role for user:', userId);
+                const { data, error } = await supabase
+                    .rpc('get_user_role', { user_id: userId });
+                
+                if (error) {
+                    console.error('Error fetching user role:', {
+                        message: error.message,
+                        details: error.details,
+                        hint: error.hint,
+                        code: error.code
+                    });
+                    
+                    // Handle specific error cases
+                    if (error.code === 'PGRST116') {
+                        console.error('Profile not found for user:', userId);
+                        // You might want to create a profile here if it doesn't exist
+                    } else if (error.code === '500') {
+                        console.error('Server error when fetching profile. This might indicate a database or permission issue.');
+                    }
+                    
+                    setUserRole(null);
+                    return;
+                }
+                
+                if (data !== null) {
+                    // console.log('Successfully fetched user role:', data);
+                    setUserRole(data);
+                } else {
+                    // console.log('No role data found for user:', userId);
+                    setUserRole(null);
+                }
+            } catch (err) {
+                console.error('Unexpected error in fetchUserRole:', err);
+                setUserRole(null);
             }
         };
 
@@ -34,7 +61,7 @@ export const AuthProvider = ({ children }) => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
             if (session?.user) {
-                fetchUserRole(session.user.id);
+                // fetchUserRole(session.user.id);
             } else {
                 setUserRole(null);
             }

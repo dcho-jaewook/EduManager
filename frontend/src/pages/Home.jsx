@@ -31,6 +31,7 @@ function Home() {
                     ) : (
                         <NotSignedIn message="Sign In to Access Features"/>
                     )}
+                <h1>Your Role: {userRole}</h1>
             </div>
         </div>
     );
