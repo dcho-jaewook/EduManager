@@ -22,7 +22,7 @@ function Programs() {
 
         const fetchPrograms = async () => {
             try {
-                // Log detailed auth information
+                //Log detailed auth information
                 console.log('Auth State:', {
                     userId: user?.id,
                     email: user?.email,
