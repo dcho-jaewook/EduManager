@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import './NavBar.css';
 
 function NavBar() {
-    const { user, signInWithGoogle, signOut } = useAuth();
+    const { user, userRole, signInWithGoogle, signOut } = useAuth();
 
     return (
         <nav>
@@ -17,6 +17,11 @@ function NavBar() {
                 <li>
                     <a href="https://www.edugate-kr.com/" target="_blank">EduGate</a>
                 </li>
+                {userRole === 'admin' && (
+                    <li>
+                        <Link to="/admin">Admin</Link>
+                    </li>
+                )}
                 <li>
                     {user ? (
                         <a onClick={signOut}>Sign Out</a>

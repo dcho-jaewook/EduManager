@@ -1,0 +1,193 @@
+.admin-header {
+    margin-bottom: 2rem;
+}
+
+.admin-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    border-bottom: 2px solid var(--background-light);
+    padding-bottom: 1rem;
+}
+
+.tab-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+    background-color: var(--background-light);
+    color: var(--text-primary);
+}
+
+.tab-button.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.admin-section {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.admin-section h2 {
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.user-card {
+    background: var(--background-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.user-info h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.user-info p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.user-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.role-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background-color: white;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.setting-card {
+    background: var(--background-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.setting-card h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.setting-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.user-card.admin {
+    border: 2px solid var(--primary-color);
+    background-color: rgba(48, 205, 215, 0.05);
+}
+
+.user-card.pending {
+    border: 2px solid #F6AD55;
+    background-color: rgba(246, 173, 85, 0.05);
+}
+
+.user-card.pending .user-info p {
+    color: #C05621;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    max-width: 500px;
+    width: 90%;
+}
+
+.modal-content h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.modal-content p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.btn-secondary {
+    background-color: #E2E8F0;
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background-color: #CBD5E0;
+}
+
+/* Disable styles for admin role select */
+.role-select:disabled {
+    background-color: #F7FAFC;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Add a visual indicator for admin users */
+.user-card.admin .user-info p {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* Add a visual indicator for pending users */
+.user-card.pending .user-info h3::after {
+    content: " (Pending)";
+    color: #C05621;
+    font-size: 0.9em;
+    font-weight: normal;
+} 
