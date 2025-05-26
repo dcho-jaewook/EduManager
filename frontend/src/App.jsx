@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css'
 import Home from './pages/Home';
 import Programs from './pages/Programs';
+import ProgramCreate from './pages/ProgramCreate';
 import NavBar from './components/NavBar';
 import AuthCallback from './pages/AuthCallback';
 import AdminPage from './pages/AdminPage';
@@ -25,6 +26,14 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="admin">
                   <AdminPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route 
+              path="/programs/create" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <ProgramCreate />
                 </ProtectedRoute>
               }
             />

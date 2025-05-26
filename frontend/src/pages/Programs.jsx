@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabaseClient';
 import NotSignedIn from '../components/NotSignedIn';
+import { Link } from 'react-router-dom';
 
 function Programs() {
     const { user, userRole, loadingAuth } = useAuth();
@@ -101,7 +102,7 @@ function Programs() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                     <h1 className="page-title">Programs</h1>
                     {userRole === 'admin' && (   
-                        <button className="btn btn-primary">Add New Program</button>
+                        <Link to="/programs/create" className="btn btn-primary">Add New Program</Link>
                     )}
                 </div>
                 <div>
