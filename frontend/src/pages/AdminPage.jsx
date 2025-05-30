@@ -104,20 +104,6 @@ function AdminPage() {
         <div className="container">
             <div className="admin-header">
                 <h1 className="page-title">Admin Dashboard</h1>
-                <div className="admin-tabs">
-                    <button 
-                        className={`tab-button ${activeTab === 'users' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('users')}
-                    >
-                        User Management
-                    </button>
-                    <button 
-                        className={`tab-button ${activeTab === 'settings' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('settings')}
-                    >
-                        System Settings
-                    </button>
-                </div>
             </div>
 
             {activeTab === 'users' && (
@@ -180,26 +166,6 @@ function AdminPage() {
                                 </div>
                             </div>
                         ))}
-                    </div>
-                </div>
-            )}
-
-            {activeTab === 'settings' && (
-                <div className="admin-section">
-                    <h2>System Settings</h2>
-                    <div className="settings-grid">
-                        <div className="setting-card">
-                            <h3>System Status</h3>
-                            <p>All systems operational</p>
-                        </div>
-                        <div className="setting-card">
-                            <h3>Database Status</h3>
-                            <p>Connected and healthy</p>
-                        </div>
-                        <div className="setting-card">
-                            <h3>Last Backup</h3>
-                            <p>2024-03-20 15:30:00</p>
-                        </div>
                     </div>
                 </div>
             )}

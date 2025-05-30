@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabaseClient';
 import NotSignedIn from '../components/NotSignedIn';
+import { Link } from 'react-router-dom';
+import './programs.css';
 
 function Programs() {
     const { user, userRole, loadingAuth } = useAuth();
@@ -68,7 +70,7 @@ function Programs() {
         return <NotSignedIn message="Sign In to Access Program List"/>;
     }
 
-    if (userRole !== 'admin') {
+    if (userRole == null) {
         return (
             <div className="container">
                 <div className="error">
@@ -100,13 +102,14 @@ function Programs() {
             <div className="card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                     <h1 className="page-title">Programs</h1>
-                    <button className="btn btn-primary">Add New Program</button>
+                    {userRole === 'admin' && (   
+                        <Link to="/programs/create" className="btn btn-primary add-button">Add New Program</Link>
+                    )}
                 </div>
                 <div>
                     {programs.length === 0 ? (
                         <div className="no-programs">
                             <p>No programs available yet.</p>
-                            <p>Click the "Add New Program" button to create one.</p>
                         </div>
                     ) : (
                         programs.map((program) => (
