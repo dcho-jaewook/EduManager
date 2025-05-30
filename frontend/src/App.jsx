@@ -4,6 +4,7 @@ import './App.css'
 import Home from './pages/Home';
 import Programs from './pages/Programs';
 import ProgramCreate from './pages/ProgramCreate';
+import ProgramDetails from './pages/ProgramDetails';
 import NavBar from './components/NavBar';
 import AuthCallback from './pages/AuthCallback';
 import AdminPage from './pages/AdminPage';
@@ -20,6 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}/>
             <Route path="/programs" element={<Programs />}/>
+            <Route path="/programs/:programId" element={<ProgramDetails />}/>
             <Route path="/auth/callback" element={<AuthCallback />}/>
             <Route 
               path="/admin" 
