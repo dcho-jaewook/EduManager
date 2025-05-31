@@ -136,12 +136,22 @@ function ProgramDetails() {
             <div className="card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                     <h1 className="page-title">{program.title}</h1>
-                    <button 
-                        className="btn btn-secondary"
-                        onClick={() => navigate('/programs')}
-                    >
-                        Back to Programs
-                    </button>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        {userRole === 'admin' && (
+                            <button 
+                                className="btn btn-primary"
+                                onClick={() => navigate(`/programs/${programId}/classes/create`)}
+                            >
+                                Create Class
+                            </button>
+                        )}
+                        <button 
+                            className="btn btn-secondary"
+                            onClick={() => navigate('/programs')}
+                        >
+                            Back to Programs
+                        </button>
+                    </div>
                 </div>
 
                 <div style={{ display: 'grid', gap: '2rem' }}>

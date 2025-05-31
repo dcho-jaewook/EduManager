@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Programs from './pages/Programs';
 import ProgramCreate from './pages/ProgramCreate';
 import ProgramDetails from './pages/ProgramDetails';
+import ClassCreate from './pages/ClassCreate';
 import NavBar from './components/NavBar';
 import AuthCallback from './pages/AuthCallback';
 import AdminPage from './pages/AdminPage';
@@ -36,6 +37,14 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="admin">
                   <ProgramCreate />
+                </ProtectedRoute>
+              }
+            />
+            <Route 
+              path="/programs/:programId/classes/create" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <ClassCreate />
                 </ProtectedRoute>
               }
             />
