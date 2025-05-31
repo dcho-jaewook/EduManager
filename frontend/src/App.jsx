@@ -6,6 +6,7 @@ import Programs from './pages/Programs';
 import ProgramCreate from './pages/ProgramCreate';
 import ProgramDetails from './pages/ProgramDetails';
 import ClassCreate from './pages/ClassCreate';
+import ClassList from './pages/ClassList';
 import NavBar from './components/NavBar';
 import AuthCallback from './pages/AuthCallback';
 import AdminPage from './pages/AdminPage';
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<Home />}/>
             <Route path="/programs" element={<Programs />}/>
             <Route path="/programs/:programId" element={<ProgramDetails />}/>
+            <Route path="/programs/:programId/classes" element={<ClassList />}/>
             <Route path="/auth/callback" element={<AuthCallback />}/>
             <Route 
               path="/admin" 

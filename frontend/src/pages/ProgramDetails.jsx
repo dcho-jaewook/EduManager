@@ -137,6 +137,12 @@ function ProgramDetails() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                     <h1 className="page-title">{program.title}</h1>
                     <div style={{ display: 'flex', gap: '1rem' }}>
+                        <button 
+                            className="btn btn-primary"
+                            onClick={() => navigate(`/programs/${programId}/classes`)}
+                        >
+                            View Classes
+                        </button>
                         {userRole === 'admin' && (
                             <button 
                                 className="btn btn-primary"
