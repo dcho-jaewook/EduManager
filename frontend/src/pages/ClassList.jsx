@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabaseClient';
+import { deleteCalendarEvent } from '../lib/googleCalendar';
 import './ClassList.css';
 
 function ClassList() {
@@ -88,6 +89,22 @@ function ClassList() {
 
         try {
             setLoading(true);
+
+            // Fetch the class to get the google_event_id
+            const { data: classData, error: fetchError } = await supabase
+                .from('classes')
+                .select('google_event_id')
+                .eq('id', classId)
+                .single();
+
+            if (fetchError) throw fetchError;
+
+            // Delete the event from Google Calendar if it exists
+            if (classData.google_event_id) {
+                await deleteCalendarEvent(classData.google_event_id);
+            }
+
+            // Delete the class from the database
             const { error } = await supabase
                 .from('classes')
                 .delete()

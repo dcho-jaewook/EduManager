@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabaseClient';
+import { createCalendarEvent } from '../lib/googleCalendar';
 import ProtectedRoute from '../components/ProtectedRoute';
 import './ClassCreate.css';
 
@@ -126,6 +127,25 @@ function ClassCreate() {
                 .single();
 
             if (classError) throw classError;
+
+            // Get selected tutors and students
+            const selectedTutors = availableTutors.filter(tutor => formData.tutor_ids.includes(tutor.id));
+            const selectedStudents = availableStudents.filter(student => formData.student_ids.includes(student.id));
+
+            // Create Google Calendar event and update class with event ID
+            let googleEventId = null;
+            try {
+                const calendarEvent = await createCalendarEvent(classData, selectedTutors, selectedStudents);
+                googleEventId = calendarEvent.id;
+                // Update the class record with the Google event ID
+                await supabase
+                    .from('classes')
+                    .update({ google_event_id: googleEventId })
+                    .eq('id', classData.id);
+            } catch (calendarError) {
+                console.error('Failed to create calendar event:', calendarError);
+                // Don't throw the error - we still want to proceed with class creation
+            }
 
             // Insert class tutors
             if (formData.tutor_ids.length > 0) {

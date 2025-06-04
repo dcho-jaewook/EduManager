@@ -62,7 +62,7 @@ function ProgramDetails() {
 
             if (studentsError) throw studentsError;
             setStudents(studentsData.map(s => s.profiles));
-            console.log(studentsData);
+            // console.log(studentsData);
 
         } catch (err) {
             console.error('Error fetching program details:', err);
