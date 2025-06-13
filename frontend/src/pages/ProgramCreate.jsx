@@ -29,7 +29,7 @@ function ProgramCreate() {
             const { data: tutorsData, error: tutorsError } = await supabase
                 .from('profiles')
                 .select('id, full_name, email')
-                .eq('role', 'tutor');
+                .in('role', ['tutor', 'admin']);
 
             if (tutorsError) throw tutorsError;
             setTutors(tutorsData || []);
