@@ -120,6 +120,10 @@ function ProgramDetails() {
             return;
         }
 
+        if (!window.confirm('Are you sure you want to delete this program?')) {
+            return;
+        }
+
         try {
             const { data, error } = await supabase
                 .from('programs')
@@ -129,6 +133,8 @@ function ProgramDetails() {
             console.error('Error deleting program:', error);
             setError(error.message || 'Failed to delete program');
         }
+
+        navigate('/programs');
     }
 
     return (

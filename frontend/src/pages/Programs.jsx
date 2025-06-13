@@ -25,12 +25,12 @@ function Programs() {
 
         const fetchPrograms = async () => {
             try {
-                console.log('Auth State:', {
-                    userId: user?.id,
-                    email: user?.email,
-                    role: userRole,
-                    session: await supabase.auth.getSession()
-                });
+                // console.log('Auth State:', {
+                //     userId: user?.id,
+                //     email: user?.email,
+                //     role: userRole,
+                //     session: await supabase.auth.getSession()
+                // });
 
                 const { data, error: programsError } = await supabase
                     .from('programs')
