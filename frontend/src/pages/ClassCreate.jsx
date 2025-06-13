@@ -175,7 +175,7 @@ function ClassCreate() {
                 if (studentsError) throw studentsError;
             }
 
-            navigate(`/programs/${programId}`);
+            navigate(`/programs/${programId}/classes`);
         } catch (err) {
             console.error('Error creating class:', err);
             setError(err.message);
