@@ -6,6 +6,8 @@ import { createCalendarEvent } from '../lib/googleCalendar';
 import ProtectedRoute from '../components/ProtectedRoute';
 import './ClassCreate.css';
 
+const calendar_id = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
+
 function ClassCreate() {
     const { programId } = useParams();
     const navigate = useNavigate();
@@ -135,7 +137,7 @@ function ClassCreate() {
             // Create Google Calendar event and update class with event ID
             let googleEventId = null;
             try {
-                const calendarEvent = await createCalendarEvent(classData, selectedTutors, selectedStudents);
+                const calendarEvent = await createCalendarEvent(classData, selectedTutors, selectedStudents, calendar_id);
                 googleEventId = calendarEvent.id;
                 // Update the class record with the Google event ID
                 await supabase

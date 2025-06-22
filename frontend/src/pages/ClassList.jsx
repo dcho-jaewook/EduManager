@@ -5,6 +5,8 @@ import { supabase } from '../lib/supabaseClient';
 import { deleteCalendarEvent } from '../lib/googleCalendar';
 import './ClassList.css';
 
+const calendar_id = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
+
 function ClassList() {
     const { programId } = useParams();
     const navigate = useNavigate();
@@ -101,7 +103,7 @@ function ClassList() {
 
             // Delete the event from Google Calendar if it exists
             if (classData.google_event_id) {
-                await deleteCalendarEvent(classData.google_event_id);
+                await deleteCalendarEvent(classData.google_event_id, calendar_id);
             }
 
             // Delete the class from the database
