@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabaseClient';
 import NotSignedIn from '../components/NotSignedIn';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './programs.css';
 
 function Programs() {
     const { user, userRole, loadingAuth } = useAuth();
+    const navigate = useNavigate();
     const [programs, setPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -24,12 +25,12 @@ function Programs() {
 
         const fetchPrograms = async () => {
             try {
-                console.log('Auth State:', {
-                    userId: user?.id,
-                    email: user?.email,
-                    role: userRole,
-                    session: await supabase.auth.getSession()
-                });
+                // console.log('Auth State:', {
+                //     userId: user?.id,
+                //     email: user?.email,
+                //     role: userRole,
+                //     session: await supabase.auth.getSession()
+                // });
 
                 const { data, error: programsError } = await supabase
                     .from('programs')
@@ -113,19 +114,23 @@ function Programs() {
                         </div>
                     ) : (
                         programs.map((program) => (
-                            <div key={program.id} className="card" style={{ 
-                                borderLeft: '4px solid var(--primary-color)',
-                                transition: 'transform 0.2s ease',
-                                cursor: 'pointer'
-                            }}
-                            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
-                            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                            <div 
+                                key={program.id} 
+                                className="card" 
+                                style={{ 
+                                    borderLeft: '4px solid var(--primary-color)',
+                                    transition: 'transform 0.2s ease',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => navigate(`/programs/${program.id}`)}
+                                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                            >
                                 <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem' }}>{program.title}</h3>
-                                {program.description && (
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                                        {program.description}
-                                    </p>
-                                )}
+                                <div style={{ display: 'flex', gap: '1rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                                    <span>Status: {program.status}</span>
+                                    <span>Total Sessions: {program.total_sessions}</span>
+                                </div>
                             </div>
                         ))
                     )}

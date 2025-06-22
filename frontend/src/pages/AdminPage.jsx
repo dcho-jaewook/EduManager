@@ -31,7 +31,7 @@ function AdminPage() {
             
             setUsers(regularUsers);
             setPendingUsers(pending);
-            console.log(data);
+            // console.log(data);
         } catch (err) {
             console.error('Error fetching users:', err);
             setError(err.message);
